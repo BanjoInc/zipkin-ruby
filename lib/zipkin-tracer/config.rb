@@ -23,7 +23,7 @@ module ZipkinTracer
       @zookeeper         = config[:zookeeper]
       # Kafka producer information
       @kafka_producer    = config[:producer]
-      @kafka_topic       = config[:topic] if present?(config[:topic])
+      @kafka_topic       = config[:kafka_topic] if present?(config[:kafka_topic])
       # Percentage of traces which by default this service traces (as float, 1.0 means 100%)
       @sample_rate       = config[:sample_rate]       || DEFAULTS[:sample_rate]
       # A block of code which can be called to do extra annotations of traces
@@ -52,7 +52,7 @@ module ZipkinTracer
     def adapter
       if present?(@json_api_host)
         :json
-      elsif present?(@zookeeper) && RUBY_PLATFORM == 'java'
+      elsif present?(@zookeeper)
         :kafka
       elsif @kafka_producer && @kafka_producer.respond_to?(:push)
         :kafka_producer
